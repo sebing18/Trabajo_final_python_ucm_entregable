@@ -77,6 +77,7 @@ Para poder realizar el ataque, se pueden utilizar varias estrategias, pero en es
 
 **Herramientas:**
  - [ ] Python *v.3.9.13*
+ - [ ] Git
  - [ ] pip *(gestor de paquetes de python)*
 
 **Paquetes:**
