@@ -110,10 +110,13 @@ Y ya con esto empezamos a capturar todo el tráfico HTTP, para cancelar el proce
 ## Capturas de pantalla, con los diferentes resultados en la creación del archivo .JSON:
 
  - **Con el método split**
+ 
 ![1_metodo_split](./Captutas_de_Pantalla_Evidencias/1_metodo_split.jpeg)
 
  - **Creación del ciclo FOR para la variable *diccionario***
+ 
 ![forDiccionario](./Captutas_de_Pantalla_Evidencias/2_ciclo_for_variable_diccionario.jpeg) 
 
 - **Usando el médoto extend**
+
 ![1_metodo_split](./Captutas_de_Pantalla_Evidencias/3_metodo_extend.jpg)
